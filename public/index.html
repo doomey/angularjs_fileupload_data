@@ -1,22 +1,16 @@
 <!DOCTYPE html>
-<html lang="ko" ng-app="fileUploadApp">
+<html lang="ko" ng-app="fileUploadApp"><!-- ng-app은 디렉티브. 커스텀 태그, 커스텀 속성을 디렉티브라고 한다. -->
 <head>
   <meta charset="UTF-8">
   <title>AngularJS - SPA</title>
   <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css">
   <link rel="stylesheet" href="lib/bootstrap/css/bootstrap-theme.css">
   <link rel="stylesheet" href="css/styles.css">
-  <script src="lib/angularjs/angular.js"></script>
-  <script src="lib/angularjs/angular-route.js"></script>
-  <script src="lib/angularjs/angular-resource.js"></script>
-  <script src="lib/angularjs/dirPagination.js"></script>
-  <script src="lib/angularjs/ng-file-upload.js"></script>
-  <script src="app/controllers/uploadCtrl.js"></script>
 </head>
-<body ng-app="fileUploadApp" ng-controller="uploadCtrl">
-  <form name="articleForm">
+<body ng-controller="uploadCtrl">
+  <form name="articleForm" novalidate>
     <fieldset>
-      <legend>기사 송부를 위하 폼</legend>
+      <legend>기사 송부를 위한 폼</legend>
       제목:
       <input type="text" name="title" ng-model="title" size="30" required>
       <i ng-show="articleForm.title.$error.required">*required</i><br>
@@ -31,15 +25,18 @@
       <i ng-show="articleForm.photo.$error.maxSize">허용 가능한 파일의 크기를 초과했습니다 -
           {{errorFile.size / 1000000|number:1}}MB: 최대 2M</i>
       <img ng-show="articleForm.photo.$valid" ngf-thumbnail="photoFile" class="thumb">
-      <button ng-click="photoFile = null" ng-show="photoFile">
+      <button ng-click="deletePhoto('photoFile')" ng-show="photoFile">
         삭제
       </button>
       <br>
-      <button ng-disabled="!articleForm.$valid" ng-click="uploadPic(photoFile)">
+      <button ng-disabled="!articleForm.$valid" ng-click="uploadPhoto(photoFile)">
         전송
       </button>
+      <button ng-click="reset()">
+        초기화
+      </button>
       <span class="progress" ng-show="photoFile.progress >= 0">
-        <div style="width:{{photoFile.progress}}%" ng-bind="photoFile.progress + '%'"></div>
+        <div style="width:{{photoFile.progress}}%" ng-bind="photoFile.progress + '%'"></div><!-- ng-bind 대신 {{photoFile.progress}}% 를 > < 사이에 넣으면 된다. -->
       </span>
       <span ng-show="photoFile.result">
         업로드 성공!
@@ -50,5 +47,12 @@
     </fieldset>
     <br>
   </form>
+  <!-- 랜더링 시간을 줄이기 위해 랜더링 담당하는 css는 위에 위치하고 나머지 랜더링 요소가 없는 것들은 body 끝에다 넣는다. -->
+  <script src="lib/angularjs/angular.js"></script>
+  <script src="lib/angularjs/angular-route.js"></script><!-- 라우팅 맵핑 기능 -->
+  <script src="lib/angularjs/angular-resource.js"></script><!-- REST API를 생성하여 편하게 사용. optional -->
+  <script src="lib/angularjs/dirPagination.js"></script><!-- 페이징 처리할 때 가장 많이 사용하는 모듈. 1. sqi 어플리케이션 내의 페이징 처리 방법. 2. 서버에서 처리 방법. 디렉티브를 제공한다...-->
+  <script src="lib/angularjs/ng-file-upload.js"></script><!-- 파일 업로드할 때 이 모듈을 가장 많이 사용. 디렉토리, 서비스, 팩토리 등등 제공...-->
+  <script src="app/controllers/uploadCtrl.js"></script>
 </body>
 </html>
