@@ -56,7 +56,7 @@ router.post('/articles', function(req, res, next) {
 							next(err);
 						} else {
 							var result = {
-								"id": articleData.length,
+								"id": articleData.length + 1,
 								"title": fields.title,
 								"content": fields.content,
 								"s3Urls": s3Urls
@@ -70,7 +70,7 @@ router.post('/articles', function(req, res, next) {
 				);
 			} else if (!files['photo']) { // 사진을 올리지 않은 경우
 				var result = {
-					"id": articleData.length,
+					"id": articleData.length + 1,
 					"title": fields.title,
 					"content": fields.content,
 					"s3Urls": []
@@ -106,7 +106,7 @@ router.post('/articles', function(req, res, next) {
 							s3Urls.push(data.Location);
 
 							var result = {
-								"id": articleData.length,
+								"id": articleData.length + 1,
 								"title": fields.title,
 								"content": fields.content,
 								"s3Urls": s3Urls
@@ -121,7 +121,7 @@ router.post('/articles', function(req, res, next) {
 		});
 	} else { // 요청 헤더의 content-type이 존재하지 않거나, application/x-www-form-urlencoded일 경우
 		var result = {
-			"id": articleData.length,
+			"id": articleData.length + 1,
 			"title": req.body.title,
 			"content": req.body.content,
 			"s3Urls": []

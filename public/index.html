@@ -1,17 +1,54 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" ng-app="fileUploadApp">
 <head>
-    <meta charset="UTF-8">
-    <title>AngularJS - SPA</title>
-    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap-theme.css">
-    <script src="lib/angularjs/angular.js"></script>
-    <script src="lib/angularjs/angular-route.js"></script>
-    <script src="lib/angularjs/angular-resource.js"></script>
-    <script src="lib/angularjs/dirPagination.js"></script>
-    <script src="lib/angularjs/ng-file-upload.js"></script>
+  <meta charset="UTF-8">
+  <title>AngularJS - SPA</title>
+  <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css">
+  <link rel="stylesheet" href="lib/bootstrap/css/bootstrap-theme.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="lib/angularjs/angular.js"></script>
+  <script src="lib/angularjs/angular-route.js"></script>
+  <script src="lib/angularjs/angular-resource.js"></script>
+  <script src="lib/angularjs/dirPagination.js"></script>
+  <script src="lib/angularjs/ng-file-upload.js"></script>
+  <script src="app/controllers/uploadCtrl.js"></script>
 </head>
-<body>
-
+<body ng-app="fileUploadApp" ng-controller="uploadCtrl">
+  <form name="articleForm">
+    <fieldset>
+      <legend>기사 송부를 위하 폼</legend>
+      제목:
+      <input type="text" name="title" ng-model="title" size="30" required>
+      <i ng-show="articleForm.title.$error.required">*required</i><br>
+      내용:
+      <textarea name="content" rows="10" cols="32" ng-model="content" required></textarea>
+      <i ng-show="articleForm.content.$error.required">*required</i><br>
+      사진:
+      <input type="file" ngf-select ng-model="photoFile" name="photo"
+             accept="image/*" ngf-max-size="2MB" required
+             ngf-model-invalid="errorFile">
+      <i ng-show="articleForm.photo.$error.required">*required</i><br>
+      <i ng-show="articleForm.photo.$error.maxSize">허용 가능한 파일의 크기를 초과했습니다 -
+          {{errorFile.size / 1000000|number:1}}MB: 최대 2M</i>
+      <img ng-show="articleForm.photo.$valid" ngf-thumbnail="photoFile" class="thumb">
+      <button ng-click="photoFile = null" ng-show="photoFile">
+        삭제
+      </button>
+      <br>
+      <button ng-disabled="!articleForm.$valid" ng-click="uploadPic(photoFile)">
+        전송
+      </button>
+      <span class="progress" ng-show="photoFile.progress >= 0">
+        <div style="width:{{photoFile.progress}}%" ng-bind="photoFile.progress + '%'"></div>
+      </span>
+      <span ng-show="photoFile.result">
+        업로드 성공!
+      </span>
+      <span class="err" ng-show="errorMsg">
+        {{errorMsg}}
+      </span>
+    </fieldset>
+    <br>
+  </form>
 </body>
 </html>
