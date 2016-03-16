@@ -69,7 +69,16 @@ router.post('/articles', function(req, res, next) {
 					}
 				);
 			} else if (!files['photo']) { // 사진을 올리지 않은 경우
+				var result = {
+					"id": articleData.length,
+					"title": fields.title,
+					"content": fields.content,
+					"s3Urls": []
+				};
 
+				articleData.push(result);
+				console.log(articleData);
+				res.json(result);
 			} else { // 사진을 한 장 올렸을 경우
 				var fileName = path.basename(files.photo.path);
 				var s3 = new AWS.S3({
@@ -111,17 +120,15 @@ router.post('/articles', function(req, res, next) {
 			}
 		});
 	} else { // 요청 헤더의 content-type이 존재하지 않거나, application/x-www-form-urlencoded일 경우
-		var title = req.body.title;
-		var content = req.body.content;
-
-		articleData.push({
+		var result = {
 			"id": articleData.length,
-			"title": title,
-			"content": content,
+			"title": req.body.title,
+			"content": req.body.content,
 			"s3Urls": []
-		});
+		};
+		articleData.push();
 		console.log(articleData);
-		res.json(articleData[articleData.length - 1]);
+		res.json(result);
 	}
 });
 
